@@ -1,0 +1,28 @@
+[
+    {
+        "id": 3,
+        "name": "HungMLB",
+        "sort": 0
+    },
+    {
+        "id": 4,
+        "name": "HungMMA",
+        "sort": 0
+    },
+    {
+        "id": 9,
+        "name": "HungWNBA",
+        "sort": 0
+    },
+    {
+        "id": 1,
+        "name": "HungSSS",
+        "sort": 0
+    },
+    {
+        "id": 2,
+        "name": "Uncategorized",
+        "parent_id": 1,
+        "sort": 0
+    }
+]

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>momenka</title>
+    <!-- 外部资源引入保持不变 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="./vue.min.js"></script>
+    <script src="./assets/common.js"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8223297477480525"
+     crossorigin="anonymous"></script>
+    <script>
+        !function (w, d, t) {
+            w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(
+            var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=document.createElement("script")
+            ;n.type="text/javascript",n.async=!0,n.src=r+"?sdkid="+e+"&lib="+t;e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};
+        
+            ttq.load('D56IRE3C77U15BU5UR6G');
+            ttq.page();
+        }(window, document, 'ttq');
+    </script>
+    
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .news-card {
+                @apply bg-white rounded-lg shadow-md overflow-hidden mb-6 transition-transform duration-300 hover:shadow-lg hover:-translate-y-1;
+            }
+            .category-badge {
+                @apply text-xs font-bold px-2 py-1 rounded-full text-white inline-block mb-2;
+            }
+            .breaking-badge {
+                @apply bg-secondary text-white text-xs font-bold px-2 py-0.5 rounded mr-2;
+            }
+            /* 新增菜单样式 */
+            .mobile-menu {
+                @apply fixed inset-y-0 left-0 bg-white z-50 transform -translate-x-full transition-transform duration-300 lg:hidden;
+                width: 70%;
+            }
+            .mobile-menu.active {
+                @apply translate-x-0;
+            }
+            .menu-overlay {
+                @apply fixed inset-0 bg-black bg-opacity-50 z-40 hidden lg:hidden;
+            }
+            .menu-overlay.active {
+                @apply block;
+            }
+            /* 文章详情页特有样式 */
+            .article-content p {
+                @apply mb-4 leading-relaxed;
+            }
+            .article-image {
+                @apply w-full h-auto rounded-lg shadow-md mb-6;
+            }
+            .author-info {
+                @apply flex items-center mb-6 p-4 bg-gray-50 rounded-lg;
+            }
+            .share-button {
+                @apply p-2 rounded-full bg-gray-100 hover:bg-primary hover:text-white transition-colors;
+            }
+            .comment-card {
+                @apply bg-white p-4 rounded-lg shadow-sm mb-4;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <div id="app">
+        <!-- 顶部导航栏 -->
+        <header class="py-4 px-4 mb-6 border-b border-gray-200 bg-white sticky top-0 z-50">
+            <div class="flex justify-between items-center">
+                <h1 class="text-2xl font-bold text-primary" @click="goHome()">
+                    <img src="./assets/logo.png" alt="Pixel Prose" class="h-8">
+                </h1>
+                <!-- 菜单按钮添加点击事件 -->
+                <button class="flex md:hidden items-center text-gray-700 hover:text-primary transition-colors" @click="toggleMenu">
+                    <i class="fas fa-bars mr-2"></i>
+                    <span>MENU</span>
+                </button>
+            </div>
+        </header>
+        
+        <!-- 移动端菜单 -->
+        <div :class="['mobile-menu', { active: isMenuOpen }]">
+            <div class="p-4 border-b">
+                <div class="flex justify-between items-center">
+                    <h2 class="font-bold text-primary">Menu</h2>
+                    <button @click="toggleMenu" class="text-gray-500 hover:text-primary">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="p-4">
+                <h3 class="font-bold mb-2 text-neutral-dark">Categories</h3>
+                <ul class="mb-6">
+                    <li v-for="category in categories" :key="category.id" class="mb-2">
+                        <a :href="'category.html?category=' + category.name" class="text-sm hover:text-primary transition-colors">{{ category.name }}</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- 菜单遮罩层 -->
+        <div :class="['menu-overlay', { active: isMenuOpen }]" @click="toggleMenu"></div>
+
+        <div class="ad-container mb-5 mt-5">
+            <span class="ad-label flex justify-center items-center mb-4">ADVERTISEMENT</span>
+            <ins class="adsbygoogle"
+                    style="display:block"
+                    data-ad-client="ca-pub-8223297477480525"
+                    data-ad-slot="4703604635"
+                    data-ad-format="auto"
+                    data-full-width-responsive="true">
+            </ins>
+        </div>
+        
+        <div class="flex flex-col lg:flex-row gap-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- 主要内容区 -->
+            <main class="lg:w-2/3">
+                <!-- 文章详情 -->
+                <article class="bg-white rounded-lg shadow-md p-6 mb-6" v-if="pageData">
+                    <span class="category-badge bg-green-500">{{ pageData.category }}</span>
+                    <h1 class="text-3xl font-bold mb-4">
+                        {{ pageData.title }}
+                    </h1>
+                    
+                    <div class="flex justify-between items-center text-sm text-gray-500 mb-6">
+                        <div>
+                            <span>{{ pageData.publish_date }}</span>
+                        </div>
+                    </div>
+                    
+                    <img :src="pageData.image_url" :alt="pageData.title" class="article-image">
+                    
+                    <div class="leading-loose" v-html="pageData.content"></div>
+                </article>
+            </main>
+            
+            <aside class="lg:w-1/3">
+                <section class="mt-16 p-6">
+                    <h2 class="text-2xl md:text-3xl font-heading font-bold mb-8">
+                        <span class="border-b-4 border-secondary pb-1">Editor's Picks</span>
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-1 gap-8" v-if="editorPicks.length > 0">
+                        <div class="bg-white rounded-xl overflow-hidden shadow-md flex flex-col card-lift" @click="toDetail(editorPicks[0].id)">
+                            <div>
+                                <img :src="editorPicks[0].image_url" :alt="editorPicks[0].title" class="w-full h-full object-cover">
+                            </div>
+                            <div class="p-4 flex flex-col">
+                                <span :class="editorPicks[0].categoryColor" class="inline-block px-3 py-1 text-xs font-semibold rounded-full text-white mb-3 w-max">
+                                    {{ editorPicks[0].category }}
+                                </span>
+                                <h3 class="text-xl font-heading font-bold mb-3 hover:text-primary transition-colors cursor-pointer line-clamp-2 overflow-hidden text-ellipsis">
+                                    {{ editorPicks[0].title }}
+                                </h3>
+                                <p class="text-gray-600 mb-4 flex-grow">
+                                    {{ editorPicks[0].summary }}
+                                </p>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-gray-500 text-sm">
+                                        {{ editorPicks[0].publish_date }}
+                                    </span>
+                                    <a :href="'/detail.html?id=' + editorPicks[0].id" class="text-secondary font-medium hover:underline">
+                                        Read more
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-xl overflow-hidden shadow-md flex flex-col card-lift" @click="toDetail(editorPicks[1].id)">
+                             <div>
+                                <img :src="editorPicks[1].image_url" :alt="editorPicks[1].title" class="w-full h-full object-cover">
+                            </div>
+                            <div class="p-4 flex flex-col">
+                                <span :class="editorPicks[1].categoryColor" class="inline-block px-3 py-1 text-xs font-semibold rounded-full text-white mb-3 w-max">
+                                    {{ editorPicks[1].category }}
+                                </span>
+                                <h3 class="text-xl font-heading font-bold mb-3 hover:text-primary transition-colors cursor-pointer line-clamp-2 overflow-hidden text-ellipsis">
+                                    {{ editorPicks[1].title }}
+                                </h3>
+                                <p class="text-gray-600 mb-4 flex-grow">
+                                    {{ editorPicks[1].summary }}
+                                </p>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-gray-500 text-sm">
+                                        {{ editorPicks[1].publish_date }}
+                                    </span>
+                                    <a :href="'/detail.html?id=' + editorPicks[1].id" class="text-secondary font-medium hover:underline">
+                                        Read more
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="bg-white p-4 rounded-lg shadow-md mb-6">
+                    <h3 class="text-lg font-bold mb-3 text-neutral-dark">Search</h3>
+                    <div class="flex">
+                        <input type="text" v-model="searchQuery" placeholder="Search news..." 
+                               class="flex-1 px-3 py-2 border border-gray-300 rounded-l focus:outline-none focus:ring-2 focus:ring-primary">
+                        <button class="bg-primary text-white px-4 py-2 rounded-r hover:bg-accent transition-colors" @click="toSearch()">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </aside>
+        </div>
+        
+        <!-- 页脚保持不变 -->
+        <footer class="mt-12 py-6 border-t border-gray-200 bg-white">
+            <div class="text-center text-gray-500 text-sm">
+                <p>&copy; 2025 momenka. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var googleScript = document.createElement('script');
+            googleScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6278654188550063';
+            googleScript.crossOrigin = 'anonymous';
+            googleScript.async = true;
+            document.head.appendChild(googleScript);
+        });
+        
+        new Vue({
+            el: '#app',
+            mixins: [AppMixin],
+            data() {
+                return {
+                    // isMenuOpen, searchQuery 已在 Mixin 中定义
+                    pageData: '',
+                    relatedTopics: [
+                        { id: 1, name: 'Sinner Live Tennis' },
+                        { id: 2, name: 'Sinner Tennis Live' },
+                        { id: 3, name: 'Torneo Tennis Torino Sinner' },
+                        { id: 4, name: 'Sinner Tennis Eta' },
+                        { id: 5, name: 'Tennis Sinner Oggi Tv' }
+                    ],
+                    // categories 已在 Mixin 中定义
+                    archives: [
+                        { id: 1, date: 'September 2025' },
+                        { id: 2, date: 'August 2025' },
+                        { id: 3, date: 'July 2025' },
+                        { id: 4, date: 'June 2025' }
+                    ],
+                    editorPicks: []
+                }
+            },
+             mounted() {
+                fetch('assets/articles.json')
+                .then(response => {
+                    // 检查响应状态是否成功
+                    if (!response.ok) {
+                    throw new Error('网络响应不正常');
+                    }
+                    // 解析 JSON 数据
+                    return response.json();
+                })
+                .then(data => {
+                    const id = this.getUrlParams().id
+                    data.forEach(item => {
+                        if (item.id == id) {
+                            this.pageData = item
+                            console.log('获取到的数据:', item);
+                        }
+                    })
+                    this.editorPicks = this.getUniqueRandomValues(data, 2)
+                })
+                .catch(error => {
+                    // 处理错误
+                    console.error('请求失败:', error);
+                });
+                this.getCategories()
+
+                setTimeout(function() {
+                    if (typeof(adsbygoogle) !== 'undefined') {
+                        adsbygoogle = window.adsbygoogle || [];
+                        adsbygoogle.push({});
+                    }
+                }, 500);
+            },
+            methods: {
+                // Mixin 中包含了 getCategories, toggleMenu, getUrlParams, goHome, toSearch, getUniqueRandomValues
+            }
+        });
+    </script>
+    <!-- <script src="assets/adTracker.js"></script>
+    <script src="assets/adDisplayTracker.js"></script> -->
+</body>
+</html>
