@@ -4,21 +4,25 @@ if (window.tailwind) {
         theme: {
             extend: {
                 colors: {
-                    // 统一使用首页的配色方案 (红色系主调)
-                    primary: '#E63946', 
-                    secondary: '#457B9D',
-                    tertiary: '#1D3557',
-                    dark: '#0F172A',
-                    light: '#F1FAEE',
+                    // 全新配色方案：深色赛博朋克风 (Dark Cyberpunk)
+                    primary: '#00ff9d',    // 霓虹绿：强调色
+                    secondary: '#ff0055',  // 霓虹红：次要强调
+                    tertiary: '#1a1a1a',   // 深灰：卡片背景
+                    dark: '#121212',       // 极黑：页面背景
+                    light: '#e0e0e0',      // 亮灰：主要文字
                     
-                    // 兼容旧页面的颜色命名，映射到新的统一色板
-                    accent: '#457B9D', // 对应 secondary
-                    neutral: '#F1FAEE', // 对应 light
-                    'neutral-dark': '#1D3557', // 对应 tertiary
+                    // 兼容映射
+                    accent: '#ff0055',     // 对应 secondary
+                    neutral: '#1a1a1a',    // 对应 tertiary (背景)
+                    'neutral-dark': '#000000', // 更深的背景
+                    
+                    // 额外颜色
+                    'surface': '#2d2d2d',  // 表面色
+                    'muted': '#888888'     // 柔和文字
                 },
                 fontFamily: {
-                    sans: ['Inter', 'system-ui', 'sans-serif'],
-                    display: ['Playfair Display', 'serif']
+                    sans: ['Courier New', 'Courier', 'monospace'], // 科技感等宽字体
+                    display: ['Arial Black', 'Impact', 'sans-serif'] // 粗犷标题字体
                 },
             }
         }

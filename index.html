@@ -43,261 +43,249 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 </head>
-<body class="bg-light font-sans text-dark">
-    <div id="app">
-        <header class="bg-white backdrop-blur-sm shadow-md sticky top-0 z-50">
-            <div class="container mx-auto px-4">
-                <div class="flex flex-row justify-between items-center py-5">
-                    <h1 class="text-2xl font-bold text-primary" @click="goHome()">
-                        <img src="./assets/logo.png" alt="Pixel Prose" class="h-8">
-                    </h1>
-                    
-                    <div class="flex md:w-auto items-center justify-between">
-                        <nav class="hidden md:flex space-x-8">
-                            <a v-for="item in categories" :key="item.name" :href="'category.html?category=' + item.name" class="font-medium nav-item transition-colors">
-                                {{ item.name }}
-                            </a>
-                        </nav>
+<body class="bg-dark font-sans text-light antialiased selection:bg-primary selection:text-dark">
+    <div id="app" class="flex h-screen overflow-hidden">
+        
+        <!-- 左侧固定导航栏 (Desktop) -->
+        <aside class="hidden md:flex flex-col w-64 border-r border-gray-800 bg-black/50 backdrop-blur-md z-50">
+            <div class="p-8 border-b border-gray-800">
+                <h1 class="text-3xl font-display font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary cursor-pointer" @click="goHome()">
+                    MOMENKA
+                </h1>
+                <p class="text-xs text-gray-500 mt-2 font-mono">NEURAL FEED v2.0</p>
+            </div>
 
-                        <button class="md:hidden ml-4 text-dark hover:text-primary transition-colors" @click="toggleMenu">
-                            <i class="fas fa-bars text-xl"></i>
-                        </button>
-                        
-                        <button class="ml-10 text-dark hover:text-primary transition-colors" @click="toSearch()">
-                            <i class="fas fa-search text-xl"></i>
-                        </button>
+            <nav class="flex-1 overflow-y-auto p-6 space-y-2">
+                <div class="mb-8">
+                    <h3 class="text-xs font-mono text-gray-500 mb-4 uppercase tracking-widest">Modules</h3>
+                    <a v-for="item in categories" :key="item.name" 
+                       :href="'category.html?category=' + item.name" 
+                       class="block py-2 px-4 -mx-4 text-sm font-bold uppercase tracking-wide text-gray-400 hover:text-primary hover:bg-white/5 transition-all border-l-2 border-transparent hover:border-primary">
+                        {{ item.name }}
+                    </a>
+                </div>
+                
+                <div class="mt-auto">
+                    <h3 class="text-xs font-mono text-gray-500 mb-4 uppercase tracking-widest">Trending</h3>
+                    <div class="space-y-4">
+                        <div v-for="(trend, index) in trendingNews.slice(0, 3)" :key="trend.id" class="group cursor-pointer" @click="toDetail(trend.id)">
+                            <div class="flex items-start gap-3">
+                                <span class="text-secondary font-mono text-xs">0{{ index + 1 }}</span>
+                                <h4 class="text-xs font-medium text-gray-300 group-hover:text-primary transition-colors line-clamp-2 leading-relaxed">
+                                    {{ trend.title }}
+                                </h4>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </header>
-        
-        <!-- 移动端侧边菜单（修改样式） -->
-        <div :class="['fixed inset-0 bg-black bg-opacity-70 z-50 transition-opacity duration-500', isMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none']" @click="toggleMenu"></div>
-        <div :class="['fixed top-0 right-0 h-full w-72 bg-tertiary z-50 transform transition-transform duration-500', isMenuOpen ? 'translate-x-0' : 'translate-x-full']">
-            <div class="p-5 border-b border-white/20 flex justify-between items-center">
-                <h3 class="font-bold text-white text-xl">Menu</h3>
-                <button @click="toggleMenu" class="text-white hover:text-primary">
-                    <i class="fas fa-times text-xl"></i>
+            </nav>
+
+            <div class="p-6 border-t border-gray-800">
+                <button class="w-full flex items-center justify-between px-4 py-3 bg-white/5 border border-white/10 rounded text-gray-400 hover:text-primary hover:border-primary transition-all group" @click="toSearch()">
+                    <span class="text-xs font-mono uppercase">Search Data</span>
+                    <i class="fas fa-search group-hover:scale-110 transition-transform"></i>
                 </button>
             </div>
-            <nav class="p-5">
-                <ul class="space-y-5">
-                    <li v-for="item in categories" :key="item.id">
-                        <a :href="'category.html?category=' + item.name" class="block py-2 text-white hover:text-primary transition-colors text-lg">{{ item.name }}</a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
+        </aside>
 
-        <div class="ad-container mb-5 mt-5">
-            <span class="ad-label flex justify-center items-center mb-4">ADVERTISEMENT</span>
-            <ins class="adsbygoogle"
-                    style="display:block"
-                    data-ad-client="ca-pub-8223297477480525"
-                    data-ad-slot="6016686309"
-                    data-ad-format="auto"
-                    data-full-width-responsive="true">
-            </ins>
-        </div>
-        
-        <!-- 头条新闻区（修改布局为垂直排列） -->
-        <section class="container mx-auto px-4 py-8">
-            <div class="space-y-6">
-                <!-- 主要头条 -->
-                <div class="relative rounded-xl overflow-hidden h-[500px] group card-hover" v-if="featuredNews" @click="toDetail(featuredNews.id)">
-                    <img :src="featuredNews.image_url" :alt="featuredNews.title" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110">
-                    <div class="absolute inset-0 gradient-overlay flex flex-col justify-end p-8">
-                        <span class="inline-block px-4 py-1.5 bg-primary text-white text-sm font-semibold rounded-full mb-4 w-max transform transition-transform group-hover:scale-110">
-                            {{ featuredNews.category }}
-                        </span>
-                        <h2 class="text-[clamp(1.8rem,5vw,3rem)] font-display font-bold text-white mb-3 leading-tight line-clamp-3">
-                            {{ featuredNews.title }}
-                        </h2>
-                        <p class="text-gray-200 mb-5 max-w-3xl text-lg">
-                            {{ featuredNews?.summary?.substring(0, 150) }}...
-                        </p>
-                        <div class="flex items-center text-gray-300">
-                            <span class="text-lg">{{ featuredNews.publish_date }}</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- 次要头条（改为水平排列） -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6" v-if="secondaryNews && secondaryNews[0]">
-                    <div class="relative rounded-xl overflow-hidden h-[280px] group card-hover" @click="toDetail(secondaryNews[0].id)">
-                        <img :src="secondaryNews[0].image_url" :alt="secondaryNews[0].title" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                        <div class="absolute inset-0 gradient-overlay flex flex-col justify-end p-6">
-                            <span class="inline-block px-3 py-1 bg-secondary text-white text-xs font-semibold rounded-full mb-3 w-max">{{ secondaryNews[0].category }}</span>
-                            <h3 class="text-xl font-display font-bold text-white leading-tight line-clamp-2">
-                                {{ secondaryNews[0].title }}
-                            </h3>
-                        </div>
-                    </div>
-                    
-                    <div class="relative rounded-xl overflow-hidden h-[280px] group card-hover" @click="toDetail(secondaryNews[1].id)">
-                        <img :src="secondaryNews[1].image_url" :alt="secondaryNews[1].title" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                        <div class="absolute inset-0 gradient-overlay flex flex-col justify-end p-6">
-                            <span class="inline-block px-3 py-1 bg-tertiary text-white text-xs font-semibold rounded-full mb-3 w-max">{{ secondaryNews[1].category }}</span>
-                            <h3 class="text-xl font-display font-bold text-white leading-tight line-clamp-2">
-                                {{ secondaryNews[1].title }}
-                            </h3>
-                        </div>
-                    </div>
-                </div>
+        <!-- 移动端头部 -->
+        <header class="md:hidden fixed top-0 left-0 right-0 h-16 bg-black/90 border-b border-gray-800 z-50 flex items-center justify-between px-4 backdrop-blur-md">
+            <h1 class="text-xl font-display font-black tracking-tighter text-primary" @click="goHome()">MOMENKA</h1>
+            <button class="text-white p-2" @click="toggleMenu">
+                <i class="fas fa-bars text-lg"></i>
+            </button>
+        </header>
+
+        <!-- 移动端全屏菜单 -->
+        <div :class="['fixed inset-0 bg-black z-[60] flex flex-col p-8 transition-all duration-500', isMenuOpen ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full pointer-events-none']">
+            <div class="flex justify-between items-center mb-12">
+                <span class="text-xs font-mono text-gray-500">SYSTEM MENU</span>
+                <button @click="toggleMenu" class="text-primary text-2xl">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
-        </section>
-        
-        <main class="container mx-auto px-4 py-10">
-            <!-- 交换侧边栏和主内容区的位置 -->
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
-                <!-- 侧边栏移到左边 -->
-                <div class="lg:col-span-4 order-2 lg:order-1">
-                    <!-- 热门新闻 -->
-                    <div class="bg-white rounded-2xl shadow-lg p-6 mb-8 transform transition-transform hover:shadow-xl">
-                        <h3 class="text-2xl font-display font-bold mb-6 flex items-center border-b border-gray-100 pb-3">
-                            <i class="fas fa-fire text-primary mr-3"></i>
-                            Trending News
-                        </h3>
-                        <div class="space-y-6">
-                            <div v-for="(trend, index) in trendingNews" :key="trend.id" class="flex gap-4 group cursor-pointer" @click="toDetail(trend.id)">
-                                <div class="font-display font-bold text-3xl text-gray-200 group-hover:text-primary transition-colors mt-1">
-                                    {{ index + 1 }}
-                                </div>
-                                <div>
-                                    <h4 class="font-medium group-hover:text-primary transition-colors line-clamp-2">
-                                        {{ trend.title }}
-                                    </h4>
-                                    <p class="text-gray-500 text-sm mt-2">
-                                        {{ trend.publish_date }}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
+            <nav class="space-y-6">
+                <a v-for="item in categories" :key="item.id" :href="'category.html?category=' + item.name" class="block text-3xl font-display font-bold text-white hover:text-primary uppercase">
+                    {{ item.name }}
+                </a>
+            </nav>
+            <div class="mt-auto">
+                <button class="w-full py-4 border border-white/20 text-white font-mono uppercase hover:bg-primary hover:text-black hover:border-primary transition-colors" @click="toSearch()">
+                    Search Database
+                </button>
+            </div>
+        </div>
+
+        <!-- 主内容区 -->
+        <main class="flex-1 overflow-y-auto bg-dark scroll-smooth relative">
+            <div class="container mx-auto max-w-7xl px-4 md:px-12 py-8 md:py-12 mt-16 md:mt-0">
+                
+                <!-- 顶部状态栏 (装饰性) -->
+                <div class="flex justify-between items-end mb-12 border-b border-gray-800 pb-4 font-mono text-xs text-gray-500">
+                    <div class="hidden md:block">
+                        <span class="text-primary">●</span> ONLINE // SYSTEM READY
+                    </div>
+                    <div class="text-right">
+                        {{ new Date().toLocaleDateString() }} <span class="mx-2">|</span> ID: GUEST_USER
                     </div>
                 </div>
-                
-                <!-- 主要新闻列表 -->
-                <div class="lg:col-span-8 order-1 lg:order-2" id="news-list-container">
-                    <h2 class="text-3xl font-display font-bold mb-8 flex items-center">
-                        <span class="w-8 h-1 bg-primary mr-3 rounded-full"></span>
-                        Latest News
-                    </h2>
-                    
-                    <div class="min-h-[600px]">
-                        <!-- 加载状态 -->
-                        <div v-if="loading" class="flex justify-center items-center h-64">
-                            <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-                        </div>
 
-                        <!-- 错误状态 -->
-                        <div v-else-if="loadError" class="bg-red-50 p-8 rounded-lg text-center">
-                            <i class="fas fa-exclamation-circle text-4xl text-red-400 mb-4"></i>
-                            <h3 class="text-xl font-bold text-gray-700 mb-2">数据加载失败</h3>
-                            <p class="text-gray-500 mb-4">{{ loadError }}</p>
-                            <button @click="getNewsList" class="px-4 py-2 bg-primary text-white rounded hover:bg-opacity-90 transition-colors">
-                                重试
-                            </button>
+                <!-- Hero Section: Cyber Grid -->
+                <section class="grid grid-cols-1 md:grid-cols-12 gap-4 mb-16" v-if="featuredNews">
+                    <!-- Featured Large -->
+                    <div class="md:col-span-8 relative group cursor-pointer overflow-hidden border border-white/10" @click="toDetail(featuredNews.id)">
+                        <div class="aspect-[16/9] md:aspect-auto md:h-[500px] overflow-hidden">
+                            <img :src="featuredNews.image_url" :alt="featuredNews.title" class="w-full h-full object-cover transition-all duration-700 grayscale group-hover:grayscale-0 group-hover:scale-105 opacity-80 group-hover:opacity-100">
                         </div>
-
-                        <div v-else class="space-y-8">
-                            <!-- 新闻卡片改为垂直布局 -->
-                            <div v-for="news in paginatedNews" :key="news.id" class="bg-white rounded-2xl overflow-hidden shadow-md card-hover" @click="toDetail(news.id)">
-                                <img :src="news.image_url" :alt="news.title" class="w-full h-56 object-cover">
-                                <div class="p-6">
-                                    <div class="flex items-center mb-4">
-                                        <span :class="news.categoryColor" class="text-xs font-semibold px-3 py-1 rounded-full text-white">
-                                            {{ news.category }}
-                                        </span>
-                                        <span class="ml-auto text-gray-500 text-sm">
-                                            {{ news.publish_date }}
-                                        </span>
-                                    </div>
-                                    <h3 class="text-2xl font-display font-bold mb-3 hover:text-primary transition-colors cursor-pointer line-clamp-2">
-                                        {{ news.title }}
-                                    </h3>
-                                    <p class="text-gray-600">
-                                        {{ news?.summary?.substring(0, 200) }}...
-                                    </p>
-                                </div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent p-6 md:p-10 flex flex-col justify-end">
+                            <div class="flex items-center gap-3 mb-4">
+                                <span class="bg-primary text-black text-xs font-bold px-2 py-1 uppercase tracking-wider font-mono">{{ featuredNews.category }}</span>
+                                <span class="text-gray-400 text-xs font-mono">{{ featuredNews.publish_date }}</span>
                             </div>
-                            
-                            <!-- 当内容不足时显示空白填充 -->
-                            <div v-if="paginatedNews.length < pageSize" class="flex-grow"></div>
+                            <h2 class="text-3xl md:text-5xl font-display font-bold text-white leading-tight mb-4 group-hover:text-primary transition-colors">
+                                {{ featuredNews.title }}
+                            </h2>
+                            <p class="text-gray-300 max-w-2xl line-clamp-2 md:line-clamp-3 hidden md:block">
+                                {{ featuredNews?.summary?.substring(0, 150) }}...
+                            </p>
                         </div>
                     </div>
                     
-                    <!-- 分页部分 -->
-                    <div class="mt-12 flex justify-center" v-if="!loading && !loadError">
-                        <nav class="inline-flex rounded-lg shadow-lg overflow-hidden">
-                            <button class="px-5 py-3 bg-white border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors"
-                                    :disabled="currentPage === 1" @click="currentPage--">
-                                <i class="fas fa-chevron-left"></i>
-                            </button>
-                            
-                            <!-- 首页 -->
-                            <button v-if="currentPage > 3" 
-                                    class="px-5 py-3 bg-white border-t border-b border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
-                                    @click="currentPage = 1; scrollToNewsTop()">
-                                1
-                            </button>
-                            
-                            <!-- 前省略号 -->
-                            <span v-if="currentPage > 4" class="px-5 py-3 bg-white border-t border-b border-gray-200 text-sm font-medium text-gray-500">
-                                ...
-                            </span>
-                            
-                            <!-- 中间页码 -->
+                    <!-- Secondary Stack -->
+                    <div class="md:col-span-4 flex flex-col gap-4">
+                        <div v-for="(news, idx) in secondaryNews.slice(0, 2)" :key="news.id" 
+                             class="relative flex-1 group cursor-pointer overflow-hidden border border-white/10"
+                             @click="toDetail(news.id)">
+                            <div class="absolute inset-0">
+                                <img :src="news.image_url" :alt="news.title" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 opacity-60 group-hover:opacity-100">
+                            </div>
+                            <div class="absolute inset-0 bg-black/60 group-hover:bg-black/40 transition-colors p-6 flex flex-col justify-end">
+                                <span class="text-primary text-xs font-mono mb-2 uppercase">{{ news.category }}</span>
+                                <h3 class="text-lg font-bold text-white leading-tight group-hover:translate-x-1 transition-transform">
+                                    {{ news.title }}
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="ad-container mb-16 border-y border-gray-800 py-8 bg-white/5">
+                    <span class="block text-center text-xs font-mono text-gray-600 mb-4 tracking-[0.2em]">SPONSORED CONTENT</span>
+                    <ins class="adsbygoogle"
+                            style="display:block"
+                            data-ad-client="ca-pub-8223297477480525"
+                            data-ad-slot="6016686309"
+                            data-ad-format="auto"
+                            data-full-width-responsive="true">
+                    </ins>
+                </div>
+
+                <!-- Latest News: Grid Layout -->
+                <section id="news-list-container">
+                    <div class="flex items-center justify-between mb-10">
+                        <h2 class="text-2xl font-display font-bold text-white uppercase tracking-tight flex items-center gap-3">
+                            <span class="w-3 h-3 bg-primary"></span>
+                            Latest Transmissions
+                        </h2>
+                        <div class="h-px bg-gray-800 flex-1 ml-6"></div>
+                    </div>
+
+                    <!-- Loading -->
+                    <div v-if="loading" class="flex justify-center items-center h-64">
+                        <div class="font-mono text-primary animate-pulse text-xl">LOADING DATA...</div>
+                    </div>
+
+                    <!-- Error -->
+                    <div v-else-if="loadError" class="border border-red-900 bg-red-900/20 p-8 text-center">
+                        <h3 class="text-red-500 font-mono mb-4">SYSTEM ERROR: {{ loadError }}</h3>
+                        <button @click="getNewsList" class="px-6 py-2 border border-red-500 text-red-500 hover:bg-red-500 hover:text-black font-mono uppercase transition-colors">
+                            Retry
+                        </button>
+                    </div>
+
+                    <!-- Grid -->
+                    <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+                        <div v-for="news in paginatedNews" :key="news.id" class="group bg-tertiary border border-white/5 hover:border-primary/50 transition-all duration-300 flex flex-col" @click="toDetail(news.id)">
+                            <div class="relative aspect-[3/2] overflow-hidden">
+                                <img :src="news.image_url" :alt="news.title" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500">
+                                <div class="absolute top-4 right-4 bg-black/80 text-white text-xs font-mono px-2 py-1">
+                                    {{ news.publish_date }}
+                                </div>
+                            </div>
+                            <div class="p-6 flex flex-col flex-1">
+                                <span class="text-primary text-xs font-bold uppercase tracking-wider mb-3">{{ news.category }}</span>
+                                <h3 class="text-xl font-bold text-white mb-4 leading-snug group-hover:text-primary transition-colors">
+                                    {{ news.title }}
+                                </h3>
+                                <p class="text-gray-400 text-sm leading-relaxed line-clamp-3 mb-6 flex-1">
+                                    {{ news?.summary?.substring(0, 150) }}...
+                                </p>
+                                <div class="mt-auto pt-4 border-t border-white/5 flex justify-between items-center text-xs font-mono text-gray-500 group-hover:text-white transition-colors">
+                                    <span>READ MORE</span>
+                                    <i class="fas fa-arrow-right transform -rotate-45 group-hover:rotate-0 transition-transform"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pagination (Minimalist) -->
+                    <div class="flex justify-center items-center gap-2 font-mono" v-if="!loading && !loadError">
+                        <button class="w-10 h-10 border border-gray-800 text-gray-500 hover:text-primary hover:border-primary disabled:opacity-30 disabled:hover:text-gray-500 disabled:hover:border-gray-800 transition-all"
+                                :disabled="currentPage === 1" @click="currentPage--">
+                            &lt;
+                        </button>
+                        
+                        <div class="flex gap-2">
                             <button v-for="page in visiblePages" :key="page" 
-                                    class="px-5 py-3 bg-white border-t border-b border-gray-200 text-sm font-medium transition-colors"
-                                    :class="page === currentPage ? 'text-primary border-primary bg-primary/5' : 'text-gray-700 hover:bg-gray-50'">
+                                    class="w-10 h-10 border transition-all"
+                                    :class="page === currentPage ? 'bg-primary text-black border-primary font-bold' : 'border-gray-800 text-gray-500 hover:text-primary hover:border-primary'"
+                                    @click="currentPage = page; scrollToNewsTop()">
                                 {{ page }}
                             </button>
-                            
-                            <!-- 后省略号 -->
-                            <span v-if="currentPage < totalPages - 3" class="px-5 py-3 bg-white border-t border-b border-gray-200 text-sm font-medium text-gray-500">
-                                ...
-                            </span>
-                            
-                            <!-- 尾页 -->
-                            <button v-if="currentPage < totalPages - 2" 
-                                    class="px-5 py-3 bg-white border-t border-b border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
-                                    @click="currentPage = totalPages; scrollToNewsTop()">
-                                {{ totalPages }}
-                            </button>
-                            
-                            <button class="px-5 py-3 bg-white border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors"
-                                    :disabled="currentPage === totalPages" @click="currentPage++; scrollToNewsTop()">
-                                <i class="fas fa-chevron-right"></i>
-                            </button>
-                        </nav>
+                        </div>
+
+                        <button class="w-10 h-10 border border-gray-800 text-gray-500 hover:text-primary hover:border-primary disabled:opacity-30 disabled:hover:text-gray-500 disabled:hover:border-gray-800 transition-all"
+                                :disabled="currentPage === totalPages" @click="currentPage++; scrollToNewsTop()">
+                            &gt;
+                        </button>
                     </div>
-                </div>
+                </section>
+
+                <footer class="mt-24 border-t border-gray-800 pt-12 pb-8 text-center md:text-left">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                        <div class="md:col-span-2">
+                            <h2 class="text-2xl font-display font-bold text-white mb-4">MOMENKA</h2>
+                            <p class="text-gray-500 max-w-sm text-sm">
+                                Decoding the noise. Delivering the signal. A next-generation news interface for the modern observer.
+                            </p>
+                        </div>
+                        <div>
+                            <h4 class="font-mono text-xs text-primary mb-6 uppercase tracking-widest">Navigation</h4>
+                            <ul class="space-y-2 text-sm text-gray-400">
+                                <li v-for="item in categories.slice(0, 5)" :key="item.id">
+                                    <a :href="'category.html?category=' + item.name" class="hover:text-white transition-colors">{{ item.name }}</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-mono text-xs text-primary mb-6 uppercase tracking-widest">Connect</h4>
+                            <div class="flex gap-4">
+                                <a href="#" class="w-10 h-10 border border-gray-700 flex items-center justify-center text-gray-400 hover:text-white hover:border-white transition-all rounded-full">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                                <a href="#" class="w-10 h-10 border border-gray-700 flex items-center justify-center text-gray-400 hover:text-white hover:border-white transition-all rounded-full">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-xs text-gray-600 font-mono border-t border-gray-800/50 pt-8 flex flex-col md:flex-row justify-between items-center">
+                        <span>&copy; 2025 MOMENKA INC.</span>
+                        <span class="mt-2 md:mt-0">DESIGNED BY TRAE</span>
+                    </div>
+                </footer>
             </div>
         </main>
-        
-        <footer class="bg-tertiary text-white pt-16 pb-8 mt-16">
-            <div class="container mx-auto px-4">
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
-                    <div class="md:col-span-2">
-                        <h3 class="text-2xl font-display font-bold mb-6">momenka</h3>
-                        <p class="mb-6 text-gray-200 max-w-md">Your premier destination for comprehensive sports news, analysis, and updates from around the world.</p>
-                    </div>
-                    
-                    <div>
-                        <h4 class="text-xl font-semibold mb-5 border-b border-white/20 pb-2">Categories</h4>
-                        <ul class="space-y-3">
-                            <li v-for="item in categories" :key="item.id">
-                                <a :href="'category.html?category=' + item.name" class="hover:text-primary transition-colors">{{ item.name }}</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <div class="border-t border-white/10 pt-8 text-center text-gray-300">
-                    <p>&copy; 2025 momenka. All rights reserved.</p>
-                </div>
-            </div>
-        </footer>
     </div>
 
     <script>
