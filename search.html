@@ -36,14 +36,14 @@
     <div id="app" class="min-h-screen flex flex-col md:flex-row">
         
         <!-- Mobile Header -->
-        <header class="md:hidden fixed top-0 left-0 right-0 z-50 bg-dark/90 backdrop-blur border-b border-white/10 px-4 py-3 flex justify-between items-center">
+        <header class="md:hidden fixed top-0 left-0 right-0 h-16 bg-dark border-b border-surface z-50 flex items-center justify-between px-4 backdrop-blur-md">
             <div class="flex items-center gap-2" @click="goHome()">
                 <div class="w-8 h-8 bg-primary flex items-center justify-center">
                     <span class="text-black font-bold text-xl">A</span>
                 </div>
-                <span class="font-display font-bold text-lg tracking-tighter text-white">AVENUE</span>
+                <span class="font-display font-bold text-lg tracking-tighter text-light">AVENUE</span>
             </div>
-            <button @click="toggleMenu" class="text-primary hover:text-white transition-colors">
+            <button @click="toggleMenu" class="text-primary hover:text-light transition-colors">
                 <i class="fas fa-bars text-2xl"></i>
             </button>
         </header>
@@ -51,7 +51,7 @@
         <!-- Mobile Menu Overlay -->
         <div class="fixed inset-0 bg-dark/95 z-[60] flex flex-col justify-center items-center transition-all duration-300 md:hidden"
              :class="isMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'">
-            <button @click="toggleMenu" class="absolute top-6 right-6 text-white hover:text-primary">
+            <button @click="toggleMenu" class="absolute top-6 right-6 text-light hover:text-primary">
                 <i class="fas fa-times text-3xl"></i>
             </button>
             <nav class="flex flex-col gap-8 text-center">
@@ -62,25 +62,25 @@
         </div>
 
         <!-- Desktop Sidebar -->
-        <aside class="hidden md:flex flex-col w-64 h-screen fixed left-0 top-0 border-r border-white/10 bg-dark z-40 p-6 justify-between">
+        <aside class="hidden md:flex flex-col w-64 h-screen fixed left-0 top-0 border-r border-surface bg-dark z-40 p-6 justify-between">
             <div>
                 <div class="flex items-center gap-3 mb-12 cursor-pointer group" @click="goHome()">
-                    <div class="w-10 h-10 bg-primary flex items-center justify-center group-hover:bg-white transition-colors">
+                    <div class="w-10 h-10 bg-primary flex items-center justify-center group-hover:bg-surface transition-colors">
                         <span class="text-black font-bold text-2xl">A</span>
                     </div>
                     <div class="flex flex-col">
-                        <span class="font-display font-bold text-xl tracking-tighter text-white leading-none">ALGORITHM</span>
-                        <span class="text-xs text-gray-500 tracking-[0.2em]">AVENUE</span>
+                        <span class="font-display font-bold text-xl tracking-tighter text-light leading-none">ALGORITHM</span>
+                        <span class="text-xs text-muted tracking-[0.2em]">AVENUE</span>
                     </div>
                 </div>
 
                 <nav class="flex flex-col gap-4">
-                    <a href="#" @click.prevent="goHome()" class="flex items-center gap-3 text-gray-400 hover:text-primary transition-colors group">
-                        <span class="text-xs text-gray-600 group-hover:text-primary">01</span>
+                    <a href="#" @click.prevent="goHome()" class="flex items-center gap-3 text-muted hover:text-primary transition-colors group">
+                        <span class="text-xs text-muted group-hover:text-primary">01</span>
                         <span class="font-bold tracking-wider">DASHBOARD</span>
                     </a>
-                    <a href="category.html" class="flex items-center gap-3 text-gray-400 hover:text-primary transition-colors group">
-                        <span class="text-xs text-gray-600 group-hover:text-primary">02</span>
+                    <a href="category.html" class="flex items-center gap-3 text-muted hover:text-primary transition-colors group">
+                        <span class="text-xs text-muted group-hover:text-primary">02</span>
                         <span class="font-bold tracking-wider">CATEGORIES</span>
                     </a>
                     <a href="search.html" class="flex items-center gap-3 text-primary transition-colors group">
@@ -90,8 +90,7 @@
                 </nav>
             </div>
 
-            <div class="text-[10px] text-gray-600 font-mono">
-                <p>SYS.VER.2.0.45</p>
+            <div class="text-[10px] text-muted font-mono">
                 <p class="mt-2">&copy; 2026 MOMENKA</p>
             </div>
         </aside>
@@ -104,13 +103,18 @@
             </div>
 
             <!-- Page Header -->
-            <header class="relative z-10 mb-12 border-b border-white/10 pb-8">
-                <h1 class="text-4xl md:text-6xl font-display font-bold text-white mb-4">
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">QUERY</span>
-                </h1>
-                <p class="text-gray-400 max-w-2xl text-sm md:text-base border-l border-primary pl-4">
-                    INITIATE DATABASE SEARCH PROTOCOL. ENTER KEYWORDS TO RETRIEVE DATA.
-                </p>
+            <header class="relative z-10 mb-12 border-b border-white/10 pb-8 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+                <div>
+                    <h1 class="text-4xl md:text-6xl font-display font-bold text-light mb-4">
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">QUERY</span>
+                    </h1>
+                    <p class="text-muted max-w-2xl text-sm md:text-base border-l border-primary pl-4">
+                        INITIATE DATABASE SEARCH PROTOCOL. ENTER KEYWORDS TO RETRIEVE DATA.
+                    </p>
+                </div>
+                <button @click="toggleTheme" class="hover:text-primary transition-colors focus:outline-none mb-2 md:mb-0" :title="isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
+                    <i :class="['fas', isDark ? 'fa-sun' : 'fa-moon', 'text-2xl']"></i>
+                </button>
             </header>
 
             <!-- Search Input -->
@@ -118,7 +122,7 @@
                 <div class="relative group">
                     <span class="absolute left-0 top-1/2 -translate-y-1/2 text-primary font-bold text-xl md:text-3xl">></span>
                     <input type="text" v-model="searchQuery" 
-                           class="w-full bg-transparent border-b-2 border-white/20 py-4 pl-8 md:pl-12 text-xl md:text-3xl font-mono text-white focus:outline-none focus:border-primary transition-colors placeholder-gray-700"
+                           class="w-full bg-transparent border-b-2 border-white/20 py-4 pl-8 md:pl-12 text-xl md:text-3xl font-mono text-light focus:outline-none focus:border-primary transition-colors placeholder-gray-700"
                            placeholder="ENTER_KEYWORDS..."
                            @keyup.enter="performSearch">
                     <span class="absolute right-0 top-1/2 -translate-y-1/2 text-primary animate-pulse cursor-blink w-3 h-8 bg-primary opacity-50 hidden md:block" v-if="!searchQuery"></span>
@@ -133,22 +137,22 @@
             <div class="relative z-10">
                 <!-- Search Stats -->
                 <div class="mb-8 flex items-center justify-between text-xs font-mono" v-if="searchQuery">
-                    <span class="text-gray-400">STATUS: <span class="text-primary">ACTIVE</span></span>
-                    <span class="text-gray-400">RESULTS: <span class="text-white">{{ filteredNews.length }} FOUND</span></span>
+                    <span class="text-muted">STATUS: <span class="text-primary">ACTIVE</span></span>
+                    <span class="text-muted">RESULTS: <span class="text-light">{{ filteredNews.length }} FOUND</span></span>
                 </div>
 
                 <!-- Empty State / Instructions -->
                 <div v-if="!searchQuery" class="border border-white/10 p-12 text-center bg-white/5">
                     <i class="fas fa-terminal text-4xl text-gray-600 mb-4"></i>
-                    <h3 class="text-xl font-bold text-white mb-2">SYSTEM READY</h3>
-                    <p class="text-gray-400 text-sm">AWAITING INPUT COMMAND...</p>
+                    <h3 class="text-xl font-bold text-light mb-2">SYSTEM READY</h3>
+                    <p class="text-muted text-sm">AWAITING INPUT COMMAND...</p>
                 </div>
 
                 <!-- No Results -->
                 <div v-else-if="filteredNews.length === 0" class="border border-red-500/30 bg-red-900/10 p-12 text-center">
                     <i class="fas fa-times-circle text-4xl text-red-500 mb-4"></i>
-                    <h3 class="text-xl font-bold text-white mb-2">NO MATCHES</h3>
-                    <p class="text-gray-400 text-sm">QUERY RETURNED ZERO RECORDS. REFINE SEARCH PARAMETERS.</p>
+                    <h3 class="text-xl font-bold text-light mb-2">NO MATCHES</h3>
+                    <p class="text-muted text-sm">QUERY RETURNED ZERO RECORDS. REFINE SEARCH PARAMETERS.</p>
                     <button class="mt-4 text-primary hover:text-white text-xs underline" @click="clearSearch">RESET SYSTEM</button>
                 </div>
 
@@ -163,7 +167,7 @@
                         <!-- Image Container -->
                         <div class="aspect-[16/9] overflow-hidden relative">
                             <div class="absolute inset-0 bg-primary/20 mix-blend-overlay z-10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                            <img :src="news.image_url" :alt="news.title" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 group-hover:scale-105">
+                            <img :src="news.image_url" :alt="news.title" class="w-full h-full object-cover transition-all duration-500 group-hover:scale-105">
                             <span :class="'absolute top-2 left-2 text-[10px] px-2 py-1 font-bold border z-20 ' + (news.category === 'Technology' ? 'bg-primary/90 text-black border-primary' : 'bg-black/80 text-white border-white/30')">
                                 {{ news.category }}
                             </span>
@@ -176,11 +180,11 @@
                                 <span v-if="news.isBreaking" class="text-secondary animate-pulse font-bold">>> CRITICAL</span>
                             </div>
                             
-                            <h3 class="text-lg font-bold text-white mb-3 leading-tight group-hover:text-primary transition-colors line-clamp-2">
+                            <h3 class="text-lg font-bold text-light mb-3 leading-tight group-hover:text-primary transition-colors line-clamp-2">
                                 <span v-html="highlightSearchTerm(news.title)"></span>
                             </h3>
                             
-                            <p class="text-gray-400 text-xs leading-relaxed mb-4 line-clamp-3 flex-1">
+                            <p class="text-muted text-xs leading-relaxed mb-4 line-clamp-3 flex-1">
                                 <span v-html="highlightSearchTerm(news.summary)"></span>
                             </p>
                             
@@ -196,7 +200,7 @@
                 <div class="flex justify-center items-center mt-16 gap-2" v-if="filteredNews.length > 0">
                     <button 
                         class="w-8 h-8 flex items-center justify-center border text-sm transition-colors"
-                        :class="currentPage === 1 ? 'border-white/10 text-gray-600 cursor-not-allowed' : 'border-white/20 text-white hover:border-primary hover:text-primary'"
+                        :class="currentPage === 1 ? 'border-white/10 text-gray-600 cursor-not-allowed' : 'border-white/20 text-light hover:border-primary hover:text-primary'"
                         :disabled="currentPage === 1" 
                         @click="currentPage--"
                     >
@@ -207,7 +211,7 @@
                         v-for="page in visiblePages" 
                         :key="page" 
                         class="w-8 h-8 flex items-center justify-center border text-sm transition-colors"
-                        :class="page === currentPage ? 'bg-primary text-black border-primary font-bold' : 'border-white/20 text-white hover:border-primary hover:text-primary'"
+                        :class="page === currentPage ? 'bg-primary text-black border-primary font-bold' : 'border-white/20 text-light hover:border-primary hover:text-primary'"
                         @click="currentPage = page"
                     >
                         {{ page }}
@@ -215,7 +219,7 @@
                     
                     <button 
                         class="w-8 h-8 flex items-center justify-center border text-sm transition-colors"
-                        :class="currentPage === totalPages ? 'border-white/10 text-gray-600 cursor-not-allowed' : 'border-white/20 text-white hover:border-primary hover:text-primary'"
+                        :class="currentPage === totalPages ? 'border-white/10 text-gray-600 cursor-not-allowed' : 'border-white/20 text-light hover:border-primary hover:text-primary'"
                         :disabled="currentPage === totalPages" 
                         @click="currentPage++"
                     >

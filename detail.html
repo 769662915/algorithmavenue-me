@@ -73,26 +73,25 @@
     <div id="app" class="flex h-screen overflow-hidden">
         
         <!-- 左侧固定导航栏 (Desktop) - 与 Index 保持一致 -->
-        <aside class="hidden md:flex flex-col w-64 border-r border-gray-800 bg-black/50 backdrop-blur-md z-50">
-            <div class="p-8 border-b border-gray-800">
+        <aside class="hidden md:flex flex-col w-64 border-r border-surface bg-dark z-50">
+            <div class="p-8 border-b border-surface">
                 <h1 class="text-3xl font-display font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary cursor-pointer" @click="goHome()">
                     MOMENKA
                 </h1>
-                <p class="text-xs text-gray-500 mt-2 font-mono">NEURAL FEED v2.0</p>
             </div>
 
             <nav class="flex-1 overflow-y-auto p-6 space-y-2">
                 <div class="mb-8">
-                    <h3 class="text-xs font-mono text-gray-500 mb-4 uppercase tracking-widest">Modules</h3>
+                    <h3 class="text-xs font-mono text-muted mb-4 uppercase tracking-widest">Modules</h3>
                     <a v-for="item in categories" :key="item.name" 
                        :href="'category.html?category=' + item.name" 
-                       class="block py-2 px-4 -mx-4 text-sm font-bold uppercase tracking-wide text-gray-400 hover:text-primary hover:bg-white/5 transition-all border-l-2 border-transparent hover:border-primary">
+                       class="block py-2 px-4 -mx-4 text-sm font-bold uppercase tracking-wide text-muted hover:text-primary hover:bg-surface transition-all border-l-2 border-transparent hover:border-primary">
                         {{ item.name }}
                     </a>
                 </div>
                 
                 <div class="mt-auto">
-                    <button class="w-full flex items-center justify-between px-4 py-3 bg-white/5 border border-white/10 rounded text-gray-400 hover:text-primary hover:border-primary transition-all group" @click="goHome()">
+                    <button class="w-full flex items-center justify-between px-4 py-3 bg-surface border border-surface rounded text-muted hover:text-primary hover:border-primary transition-all group" @click="goHome()">
                         <span class="text-xs font-mono uppercase">Back to Grid</span>
                         <i class="fas fa-arrow-left group-hover:-translate-x-1 transition-transform"></i>
                     </button>
@@ -101,23 +100,23 @@
         </aside>
 
         <!-- 移动端头部 -->
-        <header class="md:hidden fixed top-0 left-0 right-0 h-16 bg-black/90 border-b border-gray-800 z-50 flex items-center justify-between px-4 backdrop-blur-md">
+        <header class="md:hidden fixed top-0 left-0 right-0 h-16 bg-dark border-b border-surface z-50 flex items-center justify-between px-4 backdrop-blur-md">
             <h1 class="text-xl font-display font-black tracking-tighter text-primary" @click="goHome()">MOMENKA</h1>
-            <button class="text-white p-2" @click="toggleMenu">
+            <button class="text-light p-2" @click="toggleMenu">
                 <i class="fas fa-bars text-lg"></i>
             </button>
         </header>
 
         <!-- 移动端全屏菜单 -->
-        <div :class="['fixed inset-0 bg-black z-[60] flex flex-col p-8 transition-all duration-500', isMenuOpen ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full pointer-events-none']">
+        <div :class="['fixed inset-0 bg-dark z-[60] flex flex-col p-8 transition-all duration-500', isMenuOpen ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full pointer-events-none']">
             <div class="flex justify-between items-center mb-12">
-                <span class="text-xs font-mono text-gray-500">SYSTEM MENU</span>
+                <span class="text-xs font-mono text-muted">SYSTEM MENU</span>
                 <button @click="toggleMenu" class="text-primary text-2xl">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             <nav class="space-y-6">
-                <a v-for="item in categories" :key="item.id" :href="'category.html?category=' + item.name" class="block text-3xl font-display font-bold text-white hover:text-primary uppercase">
+                <a v-for="item in categories" :key="item.id" :href="'category.html?category=' + item.name" class="block text-3xl font-display font-bold text-light hover:text-primary uppercase">
                     {{ item.name }}
                 </a>
             </nav>
@@ -132,21 +131,26 @@
                     <div class="flex flex-wrap items-center gap-4 mb-6 font-mono text-xs">
                         <span class="bg-primary text-black px-2 py-1 font-bold uppercase tracking-wider">{{ pageData.category }}</span>
                         <span class="text-gray-400">// {{ pageData.publish_date }}</span>
-                        <span class="text-gray-600 ml-auto">ID: {{ pageData.id }}</span>
+                        <div class="ml-auto flex items-center gap-4">
+                            <button @click="toggleTheme" class="hover:text-primary transition-colors focus:outline-none" :title="isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
+                                <i :class="['fas', isDark ? 'fa-sun' : 'fa-moon', 'text-lg']"></i>
+                            </button>
+                            <span class="text-gray-600">ID: {{ pageData.id }}</span>
+                        </div>
                     </div>
                     
-                    <h1 class="text-4xl md:text-6xl font-display font-bold text-white leading-tight mb-8">
+                    <h1 class="text-4xl md:text-6xl font-display font-bold text-light leading-tight mb-8">
                         {{ pageData.title }}
                     </h1>
 
                     <div class="relative aspect-video w-full overflow-hidden border border-white/10">
-                        <img :src="pageData.image_url" :alt="pageData.title" class="w-full h-full object-cover grayscale opacity-90">
+                        <img :src="pageData.image_url" :alt="pageData.title" class="w-full h-full object-cover opacity-90">
                         <div class="absolute inset-0 bg-gradient-to-t from-dark to-transparent opacity-50"></div>
                     </div>
                 </header>
 
                 <!-- 文章内容 -->
-                <article class="prose prose-invert prose-lg max-w-none mb-16 font-serif text-gray-300">
+                <article class="prose prose-lg max-w-none mb-16 font-serif" :class="isDark ? 'prose-invert text-gray-300' : 'text-gray-800'">
                     <div v-html="pageData.content"></div>
                 </article>
 
@@ -162,8 +166,8 @@
                 </div>
 
                 <!-- 相关推荐 (Editor's Picks) -->
-                <section class="border-t border-gray-800 pt-16">
-                    <h3 class="text-2xl font-display font-bold text-white mb-8 flex items-center gap-3">
+                <section class="border-t border-surface pt-16">
+                    <h3 class="text-2xl font-display font-bold text-light mb-8 flex items-center gap-3">
                         <span class="w-2 h-8 bg-secondary"></span>
                         RELATED TRANSMISSIONS
                     </h3>
@@ -171,14 +175,14 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div v-for="pick in editorPicks" :key="pick.id" class="group cursor-pointer border border-white/5 hover:border-secondary/50 bg-tertiary transition-all" @click="toDetail(pick.id)">
                             <div class="aspect-video overflow-hidden">
-                                <img :src="pick.image_url" :alt="pick.title" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500">
+                                <img :src="pick.image_url" :alt="pick.title" class="w-full h-full object-cover transition-all duration-500">
                             </div>
                             <div class="p-6">
                                 <span class="text-secondary text-xs font-mono uppercase mb-2 block">{{ pick.category }}</span>
-                                <h4 class="text-xl font-bold text-white group-hover:text-secondary transition-colors mb-3">
+                                <h4 class="text-xl font-bold text-light group-hover:text-secondary transition-colors mb-3">
                                     {{ pick.title }}
                                 </h4>
-                                <p class="text-gray-500 text-sm line-clamp-2">
+                                <p class="text-muted text-sm line-clamp-2">
                                     {{ pick.summary }}
                                 </p>
                             </div>
@@ -186,7 +190,7 @@
                     </div>
                 </section>
 
-                <footer class="mt-24 border-t border-gray-800 pt-12 pb-8 text-center text-xs font-mono text-gray-600">
+                <footer class="mt-24 border-t border-surface pt-12 pb-8 text-center text-xs font-mono text-muted">
                     <p>&copy; 2025 MOMENKA INC. // END OF FILE</p>
                 </footer>
             </div>
