@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | ALGORITHM AVENUE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="./vue.min.js"></script>
+    <script src="./assets/common.js"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4978406821656132" crossorigin="anonymous"></script>
+    
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
+            .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+        }
+    </style>
+</head>
+<body class="bg-dark text-light font-mono overflow-x-hidden selection:bg-primary selection:text-black">
+    <div id="app" class="min-h-screen flex flex-col md:flex-row">
+        
+        <!-- Mobile Header -->
+        <header class="md:hidden fixed top-0 left-0 right-0 h-16 bg-dark border-b border-surface z-50 flex items-center justify-between px-4 backdrop-blur-md">
+            <div class="flex items-center gap-2" @click="goHome()">
+                <div class="w-8 h-8 bg-primary flex items-center justify-center">
+                    <span class="text-black font-bold text-xl">A</span>
+                </div>
+                <span class="font-display font-bold text-lg tracking-tighter text-light">AVENUE</span>
+            </div>
+            <button @click="toggleMenu" class="text-primary hover:text-light transition-colors">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+        </header>
+
+        <!-- Mobile Menu Overlay -->
+        <div class="fixed inset-0 bg-dark/95 z-[60] flex flex-col justify-center items-center transition-all duration-300 md:hidden"
+             :class="isMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'">
+            <button @click="toggleMenu" class="absolute top-6 right-6 text-light hover:text-primary">
+                <i class="fas fa-times text-3xl"></i>
+            </button>
+            <nav class="flex flex-col gap-8 text-center">
+                <a href="#" @click.prevent="goHome(); toggleMenu()" class="text-2xl font-bold hover:text-primary hover:tracking-widest transition-all">HOME</a>
+                <a href="category.html" class="text-2xl font-bold hover:text-primary hover:tracking-widest transition-all">CATEGORIES</a>
+                <a href="search.html" class="text-2xl font-bold hover:text-primary hover:tracking-widest transition-all">SEARCH</a>
+            </nav>
+        </div>
+
+        <!-- Desktop Sidebar -->
+        <aside class="hidden md:flex flex-col w-64 h-screen fixed left-0 top-0 border-r border-surface bg-dark z-40 p-6 justify-between">
+            <div>
+                <div class="flex items-center gap-3 mb-12 cursor-pointer group" @click="goHome()">
+                    <div class="w-10 h-10 bg-primary flex items-center justify-center group-hover:bg-surface transition-colors">
+                        <span class="text-black font-bold text-2xl">A</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="font-display font-bold text-xl tracking-tighter text-light leading-none">ALGORITHM</span>
+                        <span class="text-xs text-muted tracking-[0.2em]">AVENUE</span>
+                    </div>
+                </div>
+
+                <nav class="flex flex-col gap-4">
+                    <a href="#" @click.prevent="goHome()" class="flex items-center gap-3 text-muted hover:text-primary transition-colors group">
+                        <span class="text-xs text-muted group-hover:text-primary">01</span>
+                        <span class="font-bold tracking-wider">DASHBOARD</span>
+                    </a>
+                    <a href="category.html" class="flex items-center gap-3 text-muted hover:text-primary transition-colors group">
+                        <span class="text-xs text-muted group-hover:text-primary">02</span>
+                        <span class="font-bold tracking-wider">CATEGORIES</span>
+                    </a>
+                    <a href="search.html" class="flex items-center gap-3 text-muted hover:text-primary transition-colors group">
+                        <span class="text-xs text-muted group-hover:text-primary">03</span>
+                        <span class="font-bold tracking-wider">SEARCH</span>
+                    </a>
+                </nav>
+            </div>
+
+            <div class="text-[10px] text-muted font-mono">
+                <p class="mt-2">&copy; 2026 MOMENKA</p>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 md:ml-64 min-h-screen p-4 md:p-12 pt-20 md:pt-12 relative">
+            <!-- Background Grid -->
+            <div class="fixed inset-0 pointer-events-none z-0 opacity-[0.03]" 
+                 style="background-image: linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px); background-size: 50px 50px;">
+            </div>
+
+            <!-- Page Header -->
+            <header class="relative z-10 mb-12 border-b border-white/10 pb-8 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+                <div>
+                    <h1 class="text-4xl md:text-6xl font-display font-bold text-light mb-4">
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">ABOUT US</span>
+                    </h1>
+                </div>
+                <button @click="toggleTheme" class="hover:text-primary transition-colors focus:outline-none mb-2 md:mb-0" :title="isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
+                    <i :class="['fas', isDark ? 'fa-sun' : 'fa-moon', 'text-2xl']"></i>
+                </button>
+            </header>
+
+            <!-- Content -->
+            <div class="relative z-10 max-w-4xl">
+                <article class="prose prose-invert prose-lg text-muted">
+                    <p class="text-xl text-light mb-8 leading-relaxed">
+                        Algorithm Avenue is a premier news aggregation platform dedicated to curating the most significant technological and algorithmic developments from around the globe.
+                    </p>
+                    
+                    <h3 class="text-primary font-bold uppercase tracking-wider mb-4">Our Mission</h3>
+                    <p class="mb-8">
+                        In an era of information overload, we serve as your digital filter. We decode the noise to deliver the signal, providing high-quality, relevant news for developers, tech enthusiasts, and the modern observer.
+                    </p>
+
+                    <h3 class="text-primary font-bold uppercase tracking-wider mb-4">What We Do</h3>
+                    <p class="mb-8">
+                        We aggregate content from verified sources, categorized into clear, accessible streams. Whether you are tracking the latest in AI, cybersecurity, or software engineering, Algorithm Avenue ensures you stay ahead of the curve.
+                    </p>
+                </article>
+            </div>
+
+            <!-- Footer -->
+            <footer class="mt-20 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center text-xs text-gray-600">
+                <p>&copy; 2026 MOMENKA SYSTEM. ALL RIGHTS RESERVED.</p>
+                <div class="flex gap-4 mt-4 md:mt-0">
+                    <a href="privacy.html" class="hover:text-primary transition-colors">PRIVACY</a>
+                    <a href="terms.html" class="hover:text-primary transition-colors">TERMS</a>
+                    <a href="contact.html" class="hover:text-primary transition-colors">CONTACT</a>
+                    <a href="about.html" class="hover:text-primary transition-colors text-primary">ABOUT</a>
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var googleScript = document.createElement('script');
+            googleScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4978406821656132';
+            googleScript.crossOrigin = 'anonymous';
+            googleScript.async = true;
+            document.head.appendChild(googleScript);
+        });
+
+        new Vue({
+            el: '#app',
+            mixins: [AppMixin],
+            data() {
+                return {
+                    // Mixin handles basic state
+                }
+            },
+            mounted() {
+                this.getCategories();
+            }
+        });
+    </script>
+</body>
+</html>

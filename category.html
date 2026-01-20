@@ -227,10 +227,11 @@
 
             <!-- Ad Section -->
             <div class="mt-20 border-t border-white/10 pt-8 text-center">
-                <span class="text-[10px] text-gray-600 tracking-widest uppercase mb-4 block">Sponsored Content</span>
-                <div class="max-w-[728px] mx-auto min-h-[90px] bg-white/5 flex items-center justify-center border border-white/5">
+                <div class="max-w-[728px] mx-auto min-h-[280px] md:min-h-[120px] bg-white/5 flex items-center justify-center border border-white/5 relative overflow-hidden">
+                    <div class="absolute inset-0 animate-pulse bg-white/5 -z-10"></div>
+                    <span class="absolute top-2 left-1/2 -translate-x-1/2 text-[10px] text-gray-600 tracking-widest uppercase">Sponsored Content</span>
                     <ins class="adsbygoogle"
-                         style="display:block"
+                         style="display:block; min-width: 300px; min-height: 250px;"
                          data-ad-client="ca-pub-4978406821656132"
                          data-ad-slot="auto"
                          data-ad-format="auto"
@@ -242,9 +243,10 @@
             <footer class="mt-20 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center text-xs text-gray-600">
                 <p>&copy; 2026 MOMENKA SYSTEM. ALL RIGHTS RESERVED.</p>
                 <div class="flex gap-4 mt-4 md:mt-0">
-                    <a href="#" class="hover:text-primary transition-colors">PRIVACY</a>
-                    <a href="#" class="hover:text-primary transition-colors">TERMS</a>
-                    <a href="#" class="hover:text-primary transition-colors">CONTACT</a>
+                    <a href="privacy.html" class="hover:text-primary transition-colors">PRIVACY</a>
+                    <a href="terms.html" class="hover:text-primary transition-colors">TERMS</a>
+                    <a href="contact.html" class="hover:text-primary transition-colors">CONTACT</a>
+                    <a href="about.html" class="hover:text-primary transition-colors">ABOUT</a>
                 </div>
             </footer>
         </main>
